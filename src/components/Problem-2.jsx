@@ -39,10 +39,10 @@ const Problem2 = () => {
             const result = await axios(nextAll)
             setAll([...all ,...result.data.results]);
             // console.log(page);
-            const usres = await axios(nextUS)
             if (result.data['next'] != null) {
                 setNextAll(result.data['next'])
             }
+            const usres = await axios(nextUS)
             setUS([...us ,...usres.data.results]);
             if (usres.data['next'] != null) {
                 setNextUS(usres.data['next'])
@@ -54,7 +54,7 @@ const Problem2 = () => {
         }
         load()
         // console.log(all, page);
-    }, [page]);
+    }, []);
 
     
 
@@ -80,10 +80,10 @@ const Problem2 = () => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title>All Contacts</Modal.Title>
-                    <Button onClick={handleShow} variant="secondary">
+                    <Button style={{backgroundColor:"#46139f"}} onClick={handleShow} variant="secondary">
                         All
                     </Button>
-                    <Button onClick={handleShowUS} variant="secondary">
+                    <Button style={{backgroundColor:"#ff7f50"}} onClick={handleShowUS} variant="secondary">
                         US
                     </Button>
                 </Modal.Header>
@@ -130,10 +130,10 @@ const Problem2 = () => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Us Contacts</Modal.Title>
-                    <Button onClick={handleShow} variant="secondary">
+                    <Button style={{backgroundColor:"#46139f"}} onClick={handleShow} variant="secondary">
                         All
                     </Button>
-                    <Button onClick={handleShowUS} variant="secondary">
+                    <Button style={{backgroundColor:"#ff7f50"}} onClick={handleShowUS} variant="secondary">
                         US
                     </Button>
                 </Modal.Header>
