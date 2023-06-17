@@ -68,11 +68,12 @@ const Problem1 = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {list.map(item => (
+                            {list.filter(item => {
+                                return show == 'all' ? item : show == 'completed' ? item.status.toLowerCase() == 'completed' : item.status.toLowerCase() == 'active';
+                            }).map(item => (
                                 <tr onClick={() => setPopup({ trigger: true, id: item.id - 1 })} className='bg-emerald-200 hover:bg-emerald-300 hover:font-medium font-light' key={item.id}>
                                     <td>{item.todo}</td>
                                     <td>{item.status}</td>
-
                                 </tr>
                             ))}
 
