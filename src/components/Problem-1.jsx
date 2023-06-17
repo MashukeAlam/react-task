@@ -7,6 +7,8 @@ const Problem1 = () => {
     const [todo, setTodo] = useState('');
     const [status, setStatus] = useState('');
     const [list, setList] = useState([]);
+    const [activeList, setActiveList] = useState([]);
+    const [completedList, setCompletedList] = useState([]);
 
     const handleClick = (val) => {
         setShow(val);
@@ -15,7 +17,14 @@ const Problem1 = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('here', todo, status);
-        const id = list.length + 1;
+        let id = list.length + 1;
+        if (status.toLowerCase() == 'active') {
+            id = 1;
+        } else if (status.toLowerCase() == 'completed') {
+            id = 2;
+        } else {
+            id = 3;
+        }
         setList((now) => [
             ...now,
             {
@@ -24,7 +33,9 @@ const Problem1 = () => {
                 status
             }
         ]);
+
         console.log(list);
+        
     }
 
 
@@ -68,10 +79,10 @@ const Problem1 = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {list.filter(item => {
+                            {list.sort((a, b) => {return a.id - b.id}).filter(item => {
                                 return show == 'all' ? item : show == 'completed' ? item.status.toLowerCase() == 'completed' : item.status.toLowerCase() == 'active';
                             }).map(item => (
-                                <tr onClick={() => setPopup({ trigger: true, id: item.id - 1 })} className='bg-emerald-200 hover:bg-emerald-300 hover:font-medium font-light' key={item.id}>
+                                <tr key={Date.now()} onClick={() => setPopup({ trigger: true, id: item.id - 1 })} className='bg-emerald-200 hover:bg-emerald-300 hover:font-medium font-light'>
                                     <td>{item.todo}</td>
                                     <td>{item.status}</td>
                                 </tr>
