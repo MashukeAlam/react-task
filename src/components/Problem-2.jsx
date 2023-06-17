@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 import { Button, Modal } from 'react-bootstrap'
 import axios from 'axios';
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 const Problem2 = () => {
 
     const [show, setShow] = useState(false);
+    const [more, setMore] = useState(true);
+    const [page, setPage] = useState(1);
     const [all, setAll] = useState([]);
-    const [us, setUS] = useState([]);
+    const [us, setUS] = useState(['aa']);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -17,12 +20,16 @@ const Problem2 = () => {
     useEffect(() => {
         const load = async () => {
             const result = await axios('https://contact.mediusware.com/api/contacts/')
-            setAll(result.data.results);
+            setAll([...all ,...result.data.results]);
             console.log(result.data.results);
-            
+            setPage(page + 1)
+            console.log(page);
         }
         load()
-    }, []);
+        console.log(all, page);
+    }, [page]);
+
+    
 
 
     return (
@@ -48,7 +55,8 @@ const Problem2 = () => {
                     <Modal.Title>Modal title</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <table className="table table-striped ">
+                    <div style={{overflow: 'auto', height: '300px'}}></div>
+                <table className="table table-striped ">
                         <thead>
                             <tr>
                                 <th scope="col">Phone</th>
@@ -56,26 +64,13 @@ const Problem2 = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                <InfiniteScroll
-                                dataLength={this.state.items.length}
-                                next={this.fetchMoreData}
-                                hasMore={this.state.hasMore}
-                                loader={<h4>Loading...</h4>}
-                                endMessage={
-                                  <p style={{ textAlign: "center" }}>
-                                    <b>Yay! You have seen it all</b>
-                                  </p>
-                                }
-                              >
-                                >
-                                {this.state.items.map((i, index) => (
-                                  <div style={style} key={index}>
-                                    div - #{index}
-                                  </div>
-                                ))}
-                              </InfiniteScroll>
-                            }
+                            {all.map(item => (
+                                <tr key={item.id}>
+                                    <td>{item.phone}</td>
+                                    <td>{item.country.name}</td>
+                                </tr>
+                            ))}
+
 
                         </tbody>
                     </table>
