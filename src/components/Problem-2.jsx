@@ -1,5 +1,8 @@
 import React from 'react';
 
+import {Button, Modal} from 'react-bootstrap'
+
+
 const Problem2 = () => {
 
     return (
@@ -14,6 +17,7 @@ const Problem2 = () => {
                 </div>
                 
             </div>
+
         </div>
     );
 };
