@@ -4,15 +4,26 @@ const Problem1 = () => {
 
 
     const [show, setShow] = useState('all');
-    const [input, setInput] = useState('');
+    const [todo, setTodo] = useState('');
+    const [status, setStatus] = useState('');
     const [list, setList] = useState([]);
 
     const handleClick = (val) =>{
         setShow(val);
     }
 
-    const handleSubmit = () => {
-        console.log();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // console.log('here');
+        const id = list.length + 1;
+        setList((now) => [
+            ...now,
+            {
+                id,
+                todo,
+                status
+            }
+        ])
     }
 
 
@@ -25,10 +36,10 @@ const Problem1 = () => {
                 <div className="col-6 ">
                     <form className="row gy-2 gx-3 align-items-center mb-4">
                         <div className="col-auto">
-                            <input type="text" className="form-control" placeholder="Name"/>
+                            <input type="text" className="form-control" placeholder="Name" onChange={(e) => setTodo(e.target.value)}/>
                         </div>
                         <div className="col-auto">
-                            <input type="text" className="form-control" placeholder="Status"/>
+                            <input type="text" className="form-control" placeholder="Status" onChange={(e) => setTodo(e.target.value)}/>
                         </div>
                         <div className="col-auto">
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
