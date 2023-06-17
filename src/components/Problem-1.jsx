@@ -2,11 +2,20 @@ import React, {useState} from 'react';
 
 const Problem1 = () => {
 
+
     const [show, setShow] = useState('all');
+    const [input, setInput] = useState('');
+    const [list, setList] = useState([]);
 
     const handleClick = (val) =>{
         setShow(val);
     }
+
+    const handleSubmit = () => {
+        console.log();
+    }
+
+
 
     return (
 
@@ -22,7 +31,7 @@ const Problem1 = () => {
                             <input type="text" className="form-control" placeholder="Status"/>
                         </div>
                         <div className="col-auto">
-                            <button type="submit" className="btn btn-primary">Submit</button>
+                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                         </div>
                     </form>
                 </div>
