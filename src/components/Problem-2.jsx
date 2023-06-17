@@ -6,27 +6,54 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 
 const Problem2 = () => {
-
-    const [show, setShow] = useState(false);
+    const [curr, setCurr] = useState([])
+    const [showAll, setShowAll] = useState(false);
+    const [showUS, setShowUS] = useState(false);
     const [more, setMore] = useState(true);
     const [page, setPage] = useState(1);
     const [all, setAll] = useState([]);
-    const [us, setUS] = useState(['aa']);
+    const [us, setUS] = useState([]);
+    const [nextAll, setNextAll] = useState('https://contact.mediusware.com/api/contacts/?page=1')
+    const [nextUS, setNextUS] = useState('https://contact.mediusware.com/api/country-contacts/United%20States/?page=1')
+    const [even, setEven] = useState(false);
+    const [evenus, setEvenUS] = useState(false);
+    const handleClose = () => {
+        setShowAll(false)
+        setShowUS(false)
+    }
+    const handleShow = () => {
+        setShowAll(true);
+        setShowUS(false);
+        setCurr(all)
+    }
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShowUS = () => {
+        setShowAll(false);
+        setShowUS(true);
+        setCurr(us)
+    }
 
 
     useEffect(() => {
         const load = async () => {
-            const result = await axios('https://contact.mediusware.com/api/contacts/')
+            const result = await axios(nextAll)
             setAll([...all ,...result.data.results]);
-            console.log(result.data.results);
+            // console.log(page);
+            const usres = await axios(nextUS)
+            if (result.data['next'] != null) {
+                setNextAll(result.data['next'])
+            }
+            setUS([...us ,...usres.data.results]);
+            if (usres.data['next'] != null) {
+                setNextUS(usres.data['next'])
+            }
             setPage(page + 1)
-            console.log(page);
+            console.log(us)
+            
+            
         }
         load()
-        console.log(all, page);
+        // console.log(all, page);
     }, [page]);
 
     
@@ -40,23 +67,30 @@ const Problem2 = () => {
 
                 <div className="d-flex justify-content-center gap-3">
                     <button onClick={handleShow} className="btn btn-lg btn-outline-primary" type="button" >All Contacts</button>
-                    <button className="btn btn-lg btn-outline-warning" type="button" >US Contacts</button>
+                    <button onClick={handleShowUS} className="btn btn-lg btn-outline-warning" type="button" >US Contacts</button>
                 </div>
 
             </div>
 
             <Modal
-                show={show}
+                show={showAll}
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal title</Modal.Title>
+                    <Modal.Title>All Contacts</Modal.Title>
+                    <Button onClick={handleShow} variant="secondary">
+                        All
+                    </Button>
+                    <Button onClick={handleShowUS} variant="secondary">
+                        US
+                    </Button>
                 </Modal.Header>
                 <Modal.Body>
-                    <div style={{overflow: 'auto', height: '300px'}}></div>
-                <table className="table table-striped ">
+                    <div style={{overflow: 'auto', height: '300px'}}>
+                    
+                    <table className="table table-striped ">
                         <thead>
                             <tr>
                                 <th scope="col">Phone</th>
@@ -64,7 +98,9 @@ const Problem2 = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {all.map(item => (
+                            {curr.filter(item => {
+                                return even ? parseInt(item.phone.slice(-1)) % 2 == 0 : item;
+                            }).map(item => (
                                 <tr key={item.id}>
                                     <td>{item.phone}</td>
                                     <td>{item.country.name}</td>
@@ -74,14 +110,67 @@ const Problem2 = () => {
 
                         </tbody>
                     </table>
+                    </div>
+                
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
+                    <input type="checkbox" onChange={(e) => setEven(e.target.checked)}/>
 
                 </Modal.Footer>
             </Modal>
+
+            <Modal
+                show={showUS}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Us Contacts</Modal.Title>
+                    <Button onClick={handleShow} variant="secondary">
+                        All
+                    </Button>
+                    <Button onClick={handleShowUS} variant="secondary">
+                        US
+                    </Button>
+                </Modal.Header>
+                <Modal.Body>
+                    <div style={{overflow: 'auto', height: '300px'}}>
+                    
+                    <table className="table table-striped ">
+                        <thead>
+                            <tr>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Country</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {us.filter(item => {
+                                return !evenus ? item : parseInt(item.phone.slice(-1)) % 2 == 0;
+                            }).map(item => (
+                                <tr key={item.id}>
+                                    <td>{item.phone}</td>
+                                    <td>{item.country.name}</td>
+                                </tr>
+                            ))}
+
+
+                        </tbody>
+                    </table>
+                    </div>
+                
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <input type="checkbox" onChange={(e) => setEvenUS(e.target.checked)}/>
+                </Modal.Footer>
+            </Modal>
+
 
         </div>
     );
