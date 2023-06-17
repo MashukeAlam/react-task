@@ -16,8 +16,10 @@ const Problem1 = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
         console.log('here', todo, status);
         let id = list.length + 1;
+        let _id = list.length + 1;
         if (status.toLowerCase() == 'active') {
             id = 1;
         } else if (status.toLowerCase() == 'completed') {
@@ -28,6 +30,7 @@ const Problem1 = () => {
         setList((now) => [
             ...now,
             {
+                _id,
                 id,
                 todo,
                 status
@@ -35,6 +38,8 @@ const Problem1 = () => {
         ]);
 
         console.log(list);
+        setTodo('')
+        setStatus('')
         
     }
 
@@ -48,10 +53,10 @@ const Problem1 = () => {
                 <div className="col-6 ">
                     <form className="row gy-2 gx-3 align-items-center mb-4">
                         <div className="col-auto">
-                            <input type="text" className="form-control" placeholder="Name" onChange={(e) => setTodo(e.target.value)} />
+                            <input value={todo} type="text" className="form-control" placeholder="Name" onChange={(e) => setTodo(e.target.value)} />
                         </div>
                         <div className="col-auto">
-                            <input type="text" className="form-control" placeholder="Status" onChange={(e) => setStatus(e.target.value)} />
+                            <input value={status} type="text" className="form-control" placeholder="Status" onChange={(e) => setStatus(e.target.value)} />
                         </div>
                         <div className="col-auto">
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
@@ -82,7 +87,7 @@ const Problem1 = () => {
                             {list.sort((a, b) => {return a.id - b.id}).filter(item => {
                                 return show == 'all' ? item : show == 'completed' ? item.status.toLowerCase() == 'completed' : item.status.toLowerCase() == 'active';
                             }).map(item => (
-                                <tr key={Date.now()} onClick={() => setPopup({ trigger: true, id: item.id - 1 })} className='bg-emerald-200 hover:bg-emerald-300 hover:font-medium font-light'>
+                                <tr key={item._id}>
                                     <td>{item.todo}</td>
                                     <td>{item.status}</td>
                                 </tr>
